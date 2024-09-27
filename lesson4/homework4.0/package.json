@@ -1,0 +1,15 @@
+{
+  "name": "homework4.0",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
