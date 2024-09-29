@@ -1,25 +1,18 @@
 const connection = require('../config/db');
 
+/*
+    Уходим от callback и используем async и await
+*/
+
 const NewsModel = {
-    create: async (title, content, callback) => {
-        const query = `INSERT INTO news(title, content) VALUES("${title}","${content}")`
-        connection.query(query, (err,results) => {
-            if (!err) {
-                return callback()
-            }
-        })
+    getAll: async () => {
+        const [rows] = await connection.query('SELECT * FROM news');
+        return rows;
     },
 
-    getAll: (callback) => {
-        const query = `SELECT * FROM news`;
-        connection.query(query, (err, result) => {
-            if (err) {
-                console.log('Error while retrieving news:', err);
-                callback(err);
-            } else {
-                callback(null, result);
-            }
-        });
+    create: async (title,content) => {
+        const [result] = await connection.query(`INSERT INTO news (title, content) VALUES ("${title}", "${content}")`);
+        return result;
     }
 };
 
