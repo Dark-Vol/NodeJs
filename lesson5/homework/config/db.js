@@ -4,10 +4,10 @@ const mysql = require('mysql2/promise');
 
 // ! Вот тут поставь свои данные обратно (Я поставил свои для теста)
 const config = {
-    host: '172.17.0.2',
+    host: '127.0.0.1',
     user: 'root',
-    password: 'pass',
-    database: 'TIKod'
+    password: '',
+    database: 'learn'
 };
 
 // Тут новый метод. Ибо мы использоуем другую библиотеку MYSQL

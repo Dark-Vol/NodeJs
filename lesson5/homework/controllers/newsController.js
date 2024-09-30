@@ -7,6 +7,7 @@ const NewsModel = require('../models/newsModel');
 
 */
 
+
 const NewsController = {
     createNews: async (req, res,body) => {
         // Отправляем запрос и дожидаемся пока дойдет. Потом ставим статус код и дает ответ.
