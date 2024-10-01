@@ -23,7 +23,7 @@ server.listen(port, ip, () => console.log('server start'))
 
         req.on('end', async () => {
             body = JSON.parse(body);
-
+    }
     Вместо тебе конвертирует и собирает JSON (Удобнее так, должны смотреть были на уроке. Заспойлерю раньше :) )
 
 */
