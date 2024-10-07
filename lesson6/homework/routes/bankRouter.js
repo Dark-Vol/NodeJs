@@ -29,7 +29,7 @@ const routes = async (req, res) => {
             }
             break
         }
-        case "DELETED":{
+        case "DELETE":{
             if(url.match(/\/bank\/\d+/)){
                 const id = url.split("/")[2];
                 return await BankController.deleteBank(req, res, id)
