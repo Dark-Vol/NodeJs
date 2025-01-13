@@ -1,0 +1,68 @@
+/* Общий стиль контейнера чата */
+.chat-container {
+  width: 350px;
+  height: auto;
+  max-height: 500px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow: hidden;
+}
+
+/* Стили для текстовых областей и полей ввода */
+.chat-footer textarea,
+.chat-footer input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.chat-footer textarea {
+  height: 100px;
+  resize: none;
+}
+
+/* Стили для кнопок */
+.chat-footer button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.chat-footer button:hover {
+  background-color: #45a049;
+}
+
+/* Стили для дополнительных секций */
+.chat-container.auth {
+  border: 2px solid #7b5cf4;
+  padding: 20px;
+}
+
+.chat-container .chat-footer.textarea {
+  font-family: Arial, sans-serif;
+}
+
+/* Для заголовков, если нужно добавить */
+.chat-container .chat-header {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+  text-align: center;
+}

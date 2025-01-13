@@ -17,7 +17,7 @@ function App() {
     socket.on('receive_message', (message) => {
       setMessages([...messages,message])
     })
-  },[])
+  },[messages])
 
   console.log(messages)
 
