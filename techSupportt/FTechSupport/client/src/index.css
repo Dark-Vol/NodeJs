@@ -1,68 +1,74 @@
-/* Общий стиль контейнера чата */
-.chat-container {
-  width: 350px;
-  height: auto;
-  max-height: 500px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  overflow: hidden;
-}
-
-/* Стили для текстовых областей и полей ввода */
-.chat-footer textarea,
-.chat-footer input {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+* {
   box-sizing: border-box;
 }
 
-.chat-footer textarea {
-  height: 100px;
-  resize: none;
+h3 {
+  line-height: 0rem;
 }
 
-/* Стили для кнопок */
-.chat-footer button {
-  width: 100%;
+/* Button to open the chat */
+.open-button {
+  padding: 10px 40px;
+  background-color: #04aa6d;
+  color: white;
+  font-size: 17px;
+  max-width: 300px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+}
+
+/* Chat popup styles */
+.chat-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  position: fixed;
+  bottom: 80px;
+  right: 15px;
+  max-width: 300px;
+  z-index: 9;
   padding: 10px;
-  background-color: #4caf50;
+  border-radius: 20px;
+  background-color: yellowgreen;
+  color: #777;
+}
+
+/* Input styles */
+.chat-popup .input,
+.chat-popup .textarea {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 20px;
+  background: #ddd;
+  color: #777;
+}
+
+.chat-popup .textarea {
+  resize: none;
+  min-height: 200px;
+}
+
+.chat-popup .input:focus,
+.chat-popup .textarea:focus {
+  outline: none;
+  background-color: #f1f1f1;
+}
+
+/* Button inside chat */
+.chat-popup .button {
+  padding: 10px;
+  background-color: #04aa6d;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
-  transition: background-color 0.3s ease;
 }
 
-.chat-footer button:hover {
-  background-color: #45a049;
-}
-
-/* Стили для дополнительных секций */
-.chat-container.auth {
-  border: 2px solid #7b5cf4;
-  padding: 20px;
-}
-
-.chat-container .chat-footer.textarea {
-  font-family: Arial, sans-serif;
-}
-
-/* Для заголовков, если нужно добавить */
-.chat-container .chat-header {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 15px;
-  color: #333;
-  text-align: center;
+.chat-popup .button:hover {
+  background-color: #038c59;
 }

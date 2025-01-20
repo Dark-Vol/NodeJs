@@ -13,8 +13,6 @@ const Admin = () => {
 
     const navigate = useNavigate();
     
-
-    
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {

@@ -9,7 +9,7 @@ const Home = () => {
   const [activeChat,setActiveChat] = useState(false)
 
   const [message, setMessage] = useState("");
-  // const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([]);
   
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [room,setRoom] = useState(-1)
@@ -84,12 +84,38 @@ const Home = () => {
   }, [problemTitle, problemDescription])
 
   const SendMasseg = useCallback(() =>{
-    // При отправке сообщения оно должно отправлять апи запрос который будет сохранять это смс в базу данных
-    socket.emit("sendMessage", {room:room, name: "User", text: message})
-    console.log(4)
+    axios.post("http://localhost:4000/api/chat/message", {
+      role: "User",
+      room: room,
+      text: message,
+    }, {
+      headers: {
+        Authorization: localStorage.getItem("token")
+      }
+    })
+    .then((response) => {
+      console.log("Сообщение сохранено:", response.data);
+      socket.emit("sendMessage", { room, name: "User", text: message });
+      setMessage("");
+    })
+    .catch((error) => {
+      console.error("Ошибка при сохранении сообщения:", error.response?.data);
+    });
   },[message,room])
-  // const [tickets, setGetTickets] = useState([]);
   
+  useEffect(() => {
+    if (room !== -1) {
+      axios
+        .get(`http://localhost:4000/api/chat/message/${room}`)
+        .then((response) => {
+          setMessages(response.data.data);
+        })
+        .catch((error) => {
+          console.error("Ошибка при загрузке сообщений:", error.response?.data);
+        });
+    }
+  }, [room]);
+
   const startChat = () => {
     if(!problemTitle || !problemDescription){
       console.error("Название проблемы и описание проблемы обязательны.");
@@ -106,16 +132,16 @@ const Home = () => {
     if (isChatOpen) {
       if (auth && activeChat) {
         return (
-          <div className="chat-container">
+          <div className="chat-popup form-container">
             <textarea
-              className="chat-footer textarea"
+              className="textarea"
               name="message"
               id="message"
               placeholder="Type your message here..."
               value={message}
-              onChange={(e)=>setMessage(e.target.value)}
+              onChange={(e) => setMessage(e.target.value)}
             ></textarea>
-            <button className="chat-footer button" onClick={SendMasseg}>
+            <button className="button" onClick={SendMasseg}>
               Send
             </button>
           </div>
@@ -123,22 +149,22 @@ const Home = () => {
       }
       if (auth && activeChat === false) {
         return (
-          <div className="chat-container">
+          <div className="chat-popup form-container">
             <input
-              className="chat-footer input"
+              className="input"
               type="text"
               placeholder="Title"
               value={problemTitle}
               onChange={(e) => setProblemTitle(e.target.value)}
             />
             <input
-              className="chat-footer input"
+              className="input"
               type="text"
               placeholder="Description"
               value={problemDescription}
               onChange={(e) => setProblemDescription(e.target.value)}
             />
-            <button className="chat-footer button" onClick={startChat}>
+            <button className="button" onClick={startChat}>
               Start Chat
             </button>
           </div>
@@ -146,25 +172,25 @@ const Home = () => {
       }
       if (auth === false) {
         return (
-          <div className="chat-container auth">
+          <div className="chat-popup form-container">
             <input
-              className="chat-footer input"
+              className="input"
               type="text"
               placeholder="Email"
               value={email}
               onChange={(e) => setUserEmail(e.target.value)}
             />
             <input
-              className="chat-footer input"
+              className="input"
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setUserPassword(e.target.value)}
             />
-            <button className="chat-footer button" onClick={loginAction}>
+            <button className="button" onClick={loginAction}>
               Login
             </button>
-            <button className="chat-footer button" onClick={registerAction}>
+            <button className="button" onClick={registerAction}>
               Register
             </button>
           </div>
@@ -173,17 +199,16 @@ const Home = () => {
     }
   };
   
-
   const toggleChat = () => setIsChatOpen((prev) => !prev);
-
+  
   return (
     <>
-      <button onClick={toggleChat}>chat</button>
-      {
-        getLayoutChat()
-      }
+      <button className="open-button" onClick={toggleChat}>
+        Chat
+      </button>
+      {getLayoutChat()}
     </>
-  )
+  );  
 };
 
 export default Home;

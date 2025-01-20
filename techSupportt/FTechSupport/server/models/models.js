@@ -19,7 +19,7 @@ const Support = sequelize.define("Support", {
 
 const Message = sequelize.define("Message", {
     text: { type: DataTypes.TEXT, allowNull: false },
-    date: { type: DataTypes.DATE, defaultValue: Sequelize.NOW, allowNull: false },
+    room: { type: DataTypes.INTEGER, allowNull: false },
 });
 
 User.hasMany(Message);

@@ -25,7 +25,8 @@ io.on("connection", (socket)=>{
             console.error("room missing")
             return
         }
-        socket.join(numberRoom)
+        console.log(numberRoom,'NUMBER ROOM JOIN')
+        socket.join(Number(numberRoom))
         console.log(`socket ID: ${socket.id} connected to room ${numberRoom}`)
     })
 
@@ -34,8 +35,11 @@ io.on("connection", (socket)=>{
             console.error("data:", data);
             return
         }
+        console.log(data.room,'NUMBER ROOM SEND MESSAGE')
         console.log(`To room ${data.room} send message ${data.name} text: ${data.text}`)
-        io.to(data.room).emit("receiveMessage",data)
+        const clients = io.sockets.adapter.rooms.get(data.room);
+        console.log(clients)
+        io.to(Number(data.room)).emit("receiveMessage",data)
     })
     socket.on("disconnect", () => {
         console.log(`Socket disconnected: ${socket.id}`);

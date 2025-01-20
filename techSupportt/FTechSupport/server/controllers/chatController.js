@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User, Support} = require("../models/models");
+const { User, Support, Message, Administrator} = require("../models/models");
 
 class ChatController {
     static async createUser(req, res) {
@@ -57,21 +57,7 @@ class ChatController {
         }
         console.log(2)
     }
-    
-    static async createSendMessage(req, res){
-        try{
-            const {text} = req.body
-            if(!text){
-                return res.status(400).json("Название проблемы обязателен.");
-            }
-            console.log(3)
-            console.log(`Сообщение: ${text}`);
-            return res.status(200).json({ message: "Сообщение успешно отправлено.", data: { text } });
-        }catch (error) {
-            console.error("Ошибка при отправке сообщения:", error);
-            return res.status(500).json({ message: "Произошла ошибка при отправке сообщения.", error: error.message });
-        }
-    }
+
     static async reloginUser(req, res) {
         const authHeader = req.headers.authorization;
         if (!authHeader) {
@@ -90,6 +76,45 @@ class ChatController {
             return res.status(401).json({ message: "Токен недействителен" });
         }
     }
+
+    /*Сохранение и получение всех сообщениий */
+    static async saveMessage(req, res) {
+        const { role, text, room } = req.body;
+        const token = req.headers.authorization
+        console.log(token)
+        const id = jwt.decode(token).id
+        console.log(id)
+        if (!role || !text || !room ) {
+            return res.status(400).json("Введите имя, текст и номер комнаты");
+        }
+        try {
+            if (role == "User") {
+                const message = await Message.create({ text, room, UserId: id});
+                return res.status(201).json({ message: "Сообщение сохранено", data: message });
+            } else if (role == "admin") {
+                const message = await Message.create({ text, room, AdministratorId: id});
+                return res.status(201).json({ message: "Сообщение сохранено", data: message });
+            }
+        } catch (error) {
+            console.error("Ошибка сохранения сообщения:", error);
+            return res.status(500).json({ error: "Ошибка сервера. Попробуйте позже." });
+        }
+    }
+    
+    static async getMessages(req, res) {
+        const { room } = req.params;
+        if (!room) {
+            return res.status(400).json("Введите номер комнаты");
+        }
+        try {
+            const messages = await Message.findAll({ where: { room }, order: [["date", "ASC"]] });
+            return res.status(200).json({ data: messages });
+        } catch (error) {
+            console.error("Ошибка получения сообщений:", error);
+            return res.status(500).json({ error: "Ошибка сервера. Попробуйте позже." });
+        }
+    }
+    
 }
 
 module.exports = ChatController;
