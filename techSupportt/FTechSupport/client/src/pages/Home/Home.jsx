@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
-import io from 'socket.io-client'
+import io from "socket.io-client"
 
 const socket = io("http://localhost:4000")
 
@@ -10,7 +11,7 @@ const Home = () => {
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  
+
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [room,setRoom] = useState(-1)
 
@@ -19,7 +20,6 @@ const Home = () => {
 
   const [problemDescription, setProblemDescription] = useState("");
   const [problemTitle, setProblemTitle] = useState("");
-
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -69,40 +69,40 @@ const Home = () => {
   //
   const creatrTicket = useCallback(() =>{
     axios
-    .post("http://localhost:4000/api/chat/ticket", {
-      title: problemTitle,
-      body: problemDescription
-    })
+      .post("http://localhost:4000/api/chat/ticket", {
+        title: problemTitle,
+        body: problemDescription
+      })
       .then((response) => {
         console.log("Тикет успешно создан:", response.data);
         socket.emit("joinRoom", response.data.id)
         setRoom(response.data.id)
-    })
-    .catch((error) => {
+      })
+      .catch((error) => {
         console.error("Ошибка при создании тикета:", error);
-    });
+      });
   }, [problemTitle, problemDescription])
 
   const SendMasseg = useCallback(() =>{
     axios.post("http://localhost:4000/api/chat/message", {
-      role: "User",
-      room: room,
-      text: message,
-    }, {
-      headers: {
-        Authorization: localStorage.getItem("token")
-      }
-    })
-    .then((response) => {
-      console.log("Сообщение сохранено:", response.data);
-      socket.emit("sendMessage", { room, name: "User", text: message });
-      setMessage("");
-    })
-    .catch((error) => {
-      console.error("Ошибка при сохранении сообщения:", error.response?.data);
-    });
+          role: "User",
+          room: room,
+          text: message,
+        }, {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        })
+      .then((response) => {
+        console.log("Сообщение сохранено:", response.data);
+        socket.emit("sendMessage", { room, role: "User", text: message });
+        setMessage("");
+      })
+      .catch((error) => {
+        console.error("Ошибка при сохранении сообщения:", error.response?.data);
+      });
   },[message,room])
-  
+
   useEffect(() => {
     if (room !== -1) {
       axios
@@ -119,31 +119,53 @@ const Home = () => {
   const startChat = () => {
     if(!problemTitle || !problemDescription){
       console.error("Название проблемы и описание проблемы обязательны.");
-      console.log(5)
       return;
     }
     creatrTicket();
     setActiveChat(true)
-    // console.log(startChat)
   }
-  //
+
+  
+  useEffect(() => {
+    const handleReceiveMessage = (data) => {
+      setMessages((prevMessages) => [...prevMessages, data]);
+    };
+    socket.on("receiveMessage", handleReceiveMessage);
+    return () => {
+      socket.off("receiveMessage", handleReceiveMessage);
+    };
+  }, []);
+
+  
 
   const getLayoutChat = () => {
     if (isChatOpen) {
       if (auth && activeChat) {
         return (
-          <div className="chat-popup form-container">
-            <textarea
-              className="textarea"
-              name="message"
-              id="message"
-              placeholder="Type your message here..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            ></textarea>
-            <button className="button" onClick={SendMasseg}>
-              Send
-            </button>
+            <div className="chat-container">
+              <div className="chat-header">
+                <h1>Chat</h1>
+              </div>
+              <div className="chat-messages">
+                {messages.map((message, index) => (
+                  <div key={index} >
+                    <b>From {message.role}:</b>
+                    <p>{message.text}</p>
+                  </div>
+                ))}
+              </div>
+            <div className="chat-input-container">
+              <input
+                type="text"
+                placeholder="Type a message..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="chat-input"
+              />
+              <button onClick={SendMasseg} className="chat-send-button">
+                Send
+              </button>
+            </div>
           </div>
         );
       }
@@ -198,9 +220,9 @@ const Home = () => {
       }
     }
   };
-  
+
   const toggleChat = () => setIsChatOpen((prev) => !prev);
-  
+
   return (
     <>
       <button className="open-button" onClick={toggleChat}>
@@ -208,7 +230,7 @@ const Home = () => {
       </button>
       {getLayoutChat()}
     </>
-  );  
+  );
 };
 
 export default Home;

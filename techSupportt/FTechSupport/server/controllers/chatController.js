@@ -100,14 +100,13 @@ class ChatController {
             return res.status(500).json({ error: "Ошибка сервера. Попробуйте позже." });
         }
     }
-    
     static async getMessages(req, res) {
         const { room } = req.params;
         if (!room) {
             return res.status(400).json("Введите номер комнаты");
         }
         try {
-            const messages = await Message.findAll({ where: { room }, order: [["date", "ASC"]] });
+            const messages = await Message.findAll({ where: { room }, order: [["createdAt", "ASC"]] });
             return res.status(200).json({ data: messages });
         } catch (error) {
             console.error("Ошибка получения сообщений:", error);

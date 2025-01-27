@@ -31,12 +31,12 @@ io.on("connection", (socket)=>{
     })
 
     socket.on("sendMessage", (data) => {
-        if (!data.room || !data.text || !data.name) {
+        if (!data.room || !data.text || !data.role) {
             console.error("data:", data);
             return
         }
         console.log(data.room,'NUMBER ROOM SEND MESSAGE')
-        console.log(`To room ${data.room} send message ${data.name} text: ${data.text}`)
+        console.log(`To room ${data.room} send message ${data.role} text: ${data.text}`)
         const clients = io.sockets.adapter.rooms.get(data.room);
         console.log(clients)
         io.to(Number(data.room)).emit("receiveMessage",data)
