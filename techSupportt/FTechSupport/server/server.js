@@ -50,10 +50,12 @@ const start = async () => {
     try {
         await sequelize.authenticate();
         await sequelize.sync({ alter: true });
-        server.listen(4000, () => console.log('Server started on port 4000'));
+        console.log("Database connected successfully");
+        server.listen(5000, () => console.log("Server started on port 5000"));
     } catch (error) {
         console.error("Unable to start the server:", error.message);
     }
 };
+
 
 start();
