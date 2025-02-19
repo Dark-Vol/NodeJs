@@ -1,0 +1,28 @@
+
+Cоздать новый проект 
+Придумать в нем таблицу. 
+Реализовать все CRUD операции
+Реализовать возможность найти 1 или много элементов
+
+Доп задание со *
+Реализовать возможность получение элементов по поиску
+
+
+students table 
+name     age
+anton    23
+anya     12
+artem    41
+bogad    11
+dima     41
+
+То есть если слать запрос:
+/students?search=a 
+anton 
+anya
+artem
+/students?search=an 
+anton 
+anya
+/students?search=ant
+anton 
