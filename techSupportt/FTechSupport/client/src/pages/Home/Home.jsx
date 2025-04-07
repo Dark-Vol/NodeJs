@@ -5,21 +5,22 @@ import io from "socket.io-client"
 const socket = io("http://localhost:4000")
 
 const Home = () => {
-  const [auth,setAuth] = useState(false)
+  const [auth,setAuth] = useState(false) // useAuth
   const [activeChat,setActiveChat] = useState(false)
 
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState(""); // useChat
+  const [messages, setMessages] = useState([]); // useChat
 
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [room,setRoom] = useState(-1)
+  const [isChatOpen, setIsChatOpen] = useState(false); // useChat
+  const [room,setRoom] = useState(-1) // useChat
 
-  const [password, setUserPassword] = useState("");
-  const [email, setUserEmail] = useState("");
+  const [password, setUserPassword] = useState(""); // useAuth
+  const [email, setUserEmail] = useState(""); // useAuth
 
-  const [problemDescription, setProblemDescription] = useState("");
-  const [problemTitle, setProblemTitle] = useState("");
+  const [problemDescription, setProblemDescription] = useState(""); // useChat
+  const [problemTitle, setProblemTitle] = useState(""); // useChat
 
+  // useAuth
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -64,8 +65,9 @@ const Home = () => {
         console.error("Login failed:", err.response?.data);
       });
   }, [email, password]);
-
   //
+
+  // useChat
   const creatrTicket = useCallback(() =>{
     axios
       .post("http://localhost:4000/api/chat/ticket", {
@@ -174,7 +176,7 @@ const Home = () => {
       setActiveChat(true);
     }
   }, []);
-  
+  //
 
   const getLayoutChat = () => {
     if (isChatOpen) {

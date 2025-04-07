@@ -75,6 +75,23 @@ class ChatController {
         }
     }
 
+    static async getStateTicket(req, res) {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json("Введите ИД тикета");
+        }
+        try {
+            const ticket = await Support.findByPk(id);
+            if (!ticket) {
+                return res.status(404).json("Тикет не найден");
+            }
+            return res.status(200).json({ statusClose: ticket.statusClose });
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: "Ошибка сервера. Попробуйте позже." });
+        }
+    }
+
     static async reloginUser(req, res) {
         const authHeader = req.headers.authorization;
         if (!authHeader) {
